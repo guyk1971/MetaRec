@@ -2,6 +2,23 @@
 
 This is my PyTorch implementation of a Matrix Factorization model for Collaborative Filtering. This model adds in "side" features, especially useful in cold-start situations.
 
+## Background
+A common challenge in collaborative filtering is the cold start problem due to its inability to address new items and new users. Or many users are supplying very few ratings, making the user-item interaction matrix very sparse. A way to relieve this problem is to incorporate additional sources of information about the users, aka side features. These can be user attributes (demographics) and implicit feedback.  
+
+let’s say I know the occupation of the user. I have two choices for this side feature: adding it as a bias (artists like movies more than other occupations) and adding it as a vector (realtors love real estate shows). The matrix factorization model should integrate all signal sources with enhanced user representation, as seen in equation 5:
+$$R_{ui} = q_i*p_u+q_i*t_o + b + w_i + w_u +d_o $$ 
+
+where:
+- the bias for occupation is denoted by $d_o$ meaning that occupation changes like the rating (not implemented in the code)
+- the occupation vector is denoted by $t_o$ - having a weight per item for the occupation impact
+
+and the loss function: 
+$$\sum{(r_{ui}-q_i*p_u-q_i*t_o-b-w_i-w_u-d_o)^2+Regularize(q_i+p_u+t+o+w_i+w_o)} $$
+
+
+
+
+
 ## Requirements
 ```
 PyTorch 1.3 & Python 3.6

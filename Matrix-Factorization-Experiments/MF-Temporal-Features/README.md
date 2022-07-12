@@ -2,6 +2,24 @@
 
 This is my PyTorch implementation of a Matrix Factorization model for Collaborative Filtering. This model includes temporal effects which can track seasonal and periodic changes.
 
+## Background
+
+So far, our matrix factorization models have been static. In reality, item popularity and user preferences change constantly. Therefore, we should account for the temporal effects reflecting the dynamic nature of user-item interactions. To accomplish this, we can add a temporal term that affects user preferences and, therefore, the interaction between users and items.
+
+To mix it up a bit, let’s try out a new equation 7 below with dynamic prediction rule for a rating at time t:  
+$$ R_{ui}(t)=q_i*p_u+p_u*t_o+p_u(t)+b+w_i+w_u$$
+
+where: 
+- $p_u(t)$ takes user factors as a function of time. on the other hand, $q_i$ stays the same because items are static
+- we include occupation changes depending on the user ($p_u*t_o$)
+
+
+so the loss function:
+$$\sum{(R_{ui}-q_i*p_u-p_u*t_o-b-w_i-w_u-d_o)^2+Regularize(q_i+p_u+t+w_i+w_o+p_u(t))} $$
+
+<font color='pink'> - what is $d_o$ ? where is $p_u(t)$? </font>
+<font color='yellow'> $d_o$ is the occupation bias (we dont see it in the code) </font>
+
 ## Requirements
 ```
 PyTorch 1.3 & Python 3.6
