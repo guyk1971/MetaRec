@@ -1,7 +1,8 @@
 # Import NumPy and PyTorch
 import numpy as np
 import torch
-
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+# device = 'cpu'
 # Import PyTorch Ignite
 from ignite.engine import Events, create_supervised_trainer, create_supervised_evaluator
 from ignite.metrics import Loss
@@ -44,7 +45,7 @@ log_dir = 'runs/simple_mf_01_' + str(datetime.now()).replace(' ', '_')
 writer = SummaryWriter(log_dir=log_dir)
 
 # Instantiate the MF class object
-model = MF(n_user, n_item, writer=writer, k=k, c_vector=c_vector)
+model = MF(n_user, n_item, writer=writer, k=k, c_vector=c_vector).to(device)
 
 # Use Adam optimizer
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
@@ -56,11 +57,11 @@ trainer = create_supervised_trainer(model, optimizer, model.loss)
 metrics = {'evaluation': MeanSquaredError()}
 
 # Create a supervised evaluator
-evaluator = create_supervised_evaluator(model, metrics=metrics)
+evaluator = create_supervised_evaluator(model, metrics=metrics,device=device)
 
 # Load the train and test data
-train_loader = Loader(train_x, train_y, batchsize=1024)
-test_loader = Loader(test_x, test_y, batchsize=1024)
+train_loader = Loader(train_x, train_y, batchsize=1024,device=device)
+test_loader = Loader(test_x, test_y, batchsize=1024,device=device)
 
 
 def log_training_loss(engine, log_interval=500):

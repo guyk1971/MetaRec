@@ -8,7 +8,7 @@ class Loader():
     # Set the iterator
     current = 0
 
-    def __init__(self, x, y, batchsize=1024, do_shuffle=True):
+    def __init__(self, x, y, batchsize=1024, do_shuffle=True,device='cpu'):
         """
         :param x: features
         :param y: target
@@ -19,6 +19,7 @@ class Loader():
         self.x = x
         self.y = y
         self.batchsize = batchsize
+        self.device = device
         self.batches = range(0, len(self.y), batchsize)
         if do_shuffle:
             # Every epoch re-shuffle the dataset
@@ -42,7 +43,7 @@ class Loader():
         i = self.current
 
         # Transform NumPy arrays to PyTorch tensors
-        xs = torch.from_numpy(self.x[i:i + n])
-        ys = torch.from_numpy(self.y[i:i + n])
+        xs = torch.from_numpy(self.x[i:i + n]).to(self.device)
+        ys = torch.from_numpy(self.y[i:i + n]).to(self.device)
         self.current += n
         return xs, ys
